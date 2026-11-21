@@ -10,13 +10,15 @@
   <style>
     :root {
       --icon-size: 58px;
+      --shortcut-font-size: 12px;
       --avatar-size: 100px;
       --grid-cols: 5;
-      --grid-max-width: 600px;
       --grid-gap-y: 24px;
       --grid-gap-x: 14px;
-      --glass-bg: rgba(24, 28, 38, 0.55);
-      --glass-border: rgba(255, 255, 255, 0.14);
+      --ui-scale: 1;
+      --wrapper-max-width: 920px;
+      --content-max-width: 560px;
+      --grid-max-width: 600px;
       --glass-highlight: inset 0 1px 1px rgba(255, 255, 255, 0.22);
       --text-main: #f8fafc;
       --text-sub: #94a3b8;
@@ -42,8 +44,20 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 24px 20px 6vh 20px;
+      padding: calc(22px * var(--ui-scale)) 16px calc(6vh * var(--ui-scale));
       overflow-x: hidden;
+      position: relative;
+      font-size: calc(14px * var(--ui-scale));
+    }
+
+    /* 柔和暗化遮罩（不阻擋任何點擊互動） */
+    .brightness-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+      background-color: rgba(0, 0, 0, 0);
+      transition: background-color 0.16s ease;
     }
 
     @keyframes fadeUp {
@@ -53,10 +67,13 @@
 
     .page-wrapper {
       width: 100%;
-      max-width: 920px;
+      max-width: var(--wrapper-max-width);
       display: flex;
       flex-direction: column;
       align-items: center;
+      position: relative;
+      z-index: 4;
+      transition: max-width 0.22s ease, filter 0.16s ease;
     }
 
     header {
@@ -64,32 +81,29 @@
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 36px;
+      margin-bottom: calc(34px * var(--ui-scale));
       z-index: 30;
-      transform: translateY(32px);
+      transform: translateY(calc(28px * var(--ui-scale)));
       animation: fadeUp 0.5s ease-out;
     }
 
     .brand-signature {
       font-family: 'Caveat', 'Snell Roundhand', 'Brush Script MT', cursive;
-      font-size: clamp(36px, 6vw, 48px);
+      font-size: calc(clamp(32px, 5.5vw, 46px) * var(--ui-scale));
       font-weight: 700;
       letter-spacing: 0.5px;
       color: #f1f5f9;
       text-shadow: 0 0 18px rgba(196, 181, 253, 0.38), 0 3px 10px rgba(0, 0, 0, 0.85);
-      transform: translateY(14px) rotate(-11deg) skewX(-8deg);
+      transform: translateY(calc(12px * var(--ui-scale))) rotate(-11deg) skewX(-8deg);
       transform-origin: left center;
       user-select: none;
       padding-left: 6px;
       white-space: nowrap;
-      flex-shrink: 1;
-      min-width: 0;
+      max-width: 92vw;
     }
 
     main {
       width: 100%;
-      max-width: 780px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -99,34 +113,25 @@
     .top-profile-row {
       position: relative;
       width: 100%;
-      max-width: 560px;
+      max-width: var(--content-max-width);
       display: flex;
       justify-content: center;
       align-items: flex-end;
-      margin-bottom: 28px;
+      margin-bottom: calc(26px * var(--ui-scale));
       z-index: 40;
       animation: fadeUp 0.6s ease-out;
-    }
-
-    .avatar-container {
-      position: relative;
-      padding: 0;
-      border: none;
-      background: transparent;
+      transition: max-width 0.22s ease;
     }
 
     .avatar-wrapper {
       position: relative;
-      width: var(--avatar-size);
-      height: var(--avatar-size);
+      width: calc(var(--avatar-size) * var(--ui-scale));
+      height: calc(var(--avatar-size) * var(--ui-scale));
       border-radius: 50%;
-      border: none;
-      outline: none;
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65);
       cursor: pointer;
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.2s ease, height 0.2s ease;
       overflow: hidden;
-      background: transparent;
     }
 
     .avatar-wrapper:active {
@@ -145,13 +150,12 @@
       position: absolute;
       right: 4px;
       bottom: 0;
-      flex-shrink: 0;
       z-index: 45;
     }
 
     .hamburger-btn {
-      width: 42px;
-      height: 42px;
+      width: calc(42px * var(--ui-scale));
+      height: calc(42px * var(--ui-scale));
       border-radius: 50%;
       background: rgba(34, 42, 60, 0.88);
       border: 1.5px solid rgba(255, 255, 255, 0.42);
@@ -161,7 +165,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 4.5px;
+      gap: calc(4.5px * var(--ui-scale));
       cursor: pointer;
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
@@ -175,12 +179,11 @@
 
     .hamburger-btn:active {
       transform: scale(0.92);
-      background: rgba(65, 78, 108, 0.98);
     }
 
     .hamburger-line {
-      width: 18px;
-      height: 2.2px;
+      width: calc(18px * var(--ui-scale));
+      height: calc(2.2px * var(--ui-scale));
       background-color: #ffffff;
       border-radius: 2px;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
@@ -188,21 +191,21 @@
     }
 
     .menu-wrapper.open .hamburger-line:nth-child(1) {
-      transform: translateY(6.7px) rotate(45deg);
+      transform: translateY(calc(6.7px * var(--ui-scale))) rotate(45deg);
     }
     .menu-wrapper.open .hamburger-line:nth-child(2) {
       opacity: 0;
     }
     .menu-wrapper.open .hamburger-line:nth-child(3) {
-      transform: translateY(-6.7px) rotate(-45deg);
+      transform: translateY(calc(-6.7px * var(--ui-scale))) rotate(-45deg);
     }
 
     .dropdown-menu {
       position: absolute;
-      top: 50px;
+      top: calc(50px * var(--ui-scale));
       right: 0;
       min-width: 164px;
-      background: rgba(18, 22, 32, 0.95);
+      background: rgba(18, 22, 32, 0.96);
       border: 1px solid rgba(255, 255, 255, 0.22);
       box-shadow: var(--glass-highlight), 0 14px 32px rgba(0, 0, 0, 0.85);
       border-radius: 16px;
@@ -228,7 +231,7 @@
       color: var(--text-main);
       padding: 10px 14px;
       border-radius: 11px;
-      font-size: 13.5px;
+      font-size: calc(13.5px * var(--ui-scale));
       cursor: pointer;
       white-space: nowrap;
       transition: background 0.15s ease;
@@ -241,19 +244,19 @@
 
     .search-box {
       width: 100%;
-      max-width: 560px;
-      height: 50px;
+      max-width: var(--content-max-width);
+      height: calc(50px * var(--ui-scale));
       background: rgba(20, 24, 34, 0.68);
       border: 1px solid rgba(255, 255, 255, 0.16);
       box-shadow: var(--glass-highlight), 0 12px 32px rgba(0, 0, 0, 0.6);
-      border-radius: 25px;
+      border-radius: calc(25px * var(--ui-scale));
       display: flex;
       align-items: center;
-      padding: 0 20px;
+      padding: 0 calc(18px * var(--ui-scale));
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
-      margin-bottom: 38px;
-      transition: all 0.25s ease;
+      margin-bottom: calc(36px * var(--ui-scale));
+      transition: border-color 0.2s ease, background 0.2s ease, max-width 0.22s ease;
       animation: fadeUp 0.7s ease-out;
       position: relative;
       z-index: 10;
@@ -263,13 +266,12 @@
       border-color: rgba(255, 255, 255, 0.4);
       background: rgba(26, 32, 46, 0.88);
       box-shadow: var(--glass-highlight), 0 14px 36px rgba(0, 0, 0, 0.7), 0 0 0 3px rgba(255, 255, 255, 0.06);
-      transform: translateY(-1px);
     }
 
     .search-icon {
       color: var(--text-sub);
-      font-size: 16px;
-      margin-right: 12px;
+      font-size: calc(16px * var(--ui-scale));
+      margin-right: calc(12px * var(--ui-scale));
       user-select: none;
     }
 
@@ -279,7 +281,8 @@
       border: none;
       outline: none;
       color: var(--text-main);
-      font-size: 15px;
+      font-size: calc(15px * var(--ui-scale));
+      min-width: 0;
     }
 
     .search-input::placeholder {
@@ -290,7 +293,7 @@
       background: transparent;
       border: none;
       color: var(--text-sub);
-      font-size: 16px;
+      font-size: calc(16px * var(--ui-scale));
       cursor: pointer;
       padding: 4px 6px;
     }
@@ -300,10 +303,10 @@
       max-width: var(--grid-max-width);
       display: grid;
       grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
-      gap: var(--grid-gap-y) var(--grid-gap-x);
+      gap: calc(var(--grid-gap-y) * var(--ui-scale)) calc(var(--grid-gap-x) * var(--ui-scale));
       justify-items: center;
       animation: fadeUp 0.8s ease-out;
-      transition: max-width 0.25s ease, gap 0.25s ease;
+      transition: max-width 0.22s ease, gap 0.22s ease;
     }
 
     .shortcut-item {
@@ -312,7 +315,7 @@
       flex-direction: column;
       align-items: center;
       width: 100%;
-      max-width: 96px;
+      max-width: calc(96px * var(--ui-scale));
       text-decoration: none;
       color: var(--text-main);
       cursor: pointer;
@@ -326,12 +329,8 @@
       cursor: grab;
     }
 
-    .edit-mode .shortcut-item[data-draggable="true"]:active {
-      cursor: grabbing;
-    }
-
     .shortcut-item.dragging {
-      opacity: 0.5;
+      opacity: 0.48;
       transform: scale(1.06);
       z-index: 20;
     }
@@ -342,7 +341,8 @@
       transform: scale(1.08);
     }
 
-    .shortcut-icon {
+    .shortcut-icon,
+    .add-btn-circle {
       width: var(--icon-size);
       height: var(--icon-size);
       border-radius: 50%;
@@ -350,13 +350,24 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
-      margin-bottom: 9px;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.65);
-      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.2s ease, height 0.2s ease;
+      margin-bottom: calc(9px * var(--ui-scale));
+      transition: transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.2s ease, height 0.2s ease;
     }
 
-    .shortcut-item:active .shortcut-icon {
+    .shortcut-icon {
+      overflow: hidden;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.65);
+    }
+
+    .add-btn-circle {
+      border: 1.5px dashed rgba(255, 255, 255, 0.34);
+      color: rgba(255, 255, 255, 0.78);
+      font-size: calc(24px * var(--ui-scale));
+      font-weight: 300;
+    }
+
+    .shortcut-item:active .shortcut-icon,
+    .shortcut-item:active .add-btn-circle {
       transform: scale(0.9);
     }
 
@@ -366,7 +377,6 @@
       object-fit: cover;
       border-radius: 50%;
       display: block;
-      transition: transform 0.2s ease;
       pointer-events: none;
     }
 
@@ -387,38 +397,26 @@
       cursor: pointer;
     }
 
-    .delete-badge {
-      right: 4px;
-      background: rgba(239, 68, 68, 0.95);
-    }
-
-    .edit-badge {
-      left: 4px;
-      background: rgba(59, 130, 246, 0.95);
-    }
-
-    .edit-mode .badge-btn {
-      display: flex;
-    }
+    .delete-badge { right: 4px; background: rgba(239, 68, 68, 0.95); }
+    .edit-badge { left: 4px; background: rgba(59, 130, 246, 0.95); }
+    .edit-mode .badge-btn { display: flex; }
 
     .edit-banner {
       display: none;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      background: rgba(30, 41, 59, 0.85);
+      background: rgba(30, 41, 59, 0.88);
       border: 1px solid rgba(96, 165, 250, 0.4);
       padding: 8px 16px;
       border-radius: 20px;
-      font-size: 12.5px;
+      font-size: calc(12.5px * var(--ui-scale));
       color: #e2e8f0;
       margin-bottom: 18px;
       backdrop-filter: blur(12px);
     }
 
-    .edit-mode .edit-banner {
-      display: flex;
-    }
+    .edit-mode .edit-banner { display: flex; }
 
     .edit-done-pill {
       background: #3b82f6;
@@ -426,35 +424,13 @@
       border: none;
       border-radius: 12px;
       padding: 4px 10px;
-      font-size: 12px;
+      font-size: calc(12px * var(--ui-scale));
       cursor: pointer;
     }
 
-    .add-btn-circle {
-      width: var(--icon-size);
-      height: var(--icon-size);
-      border-radius: 50%;
-      background-color: #000000;
-      border: 1.5px dashed rgba(255, 255, 255, 0.34);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 9px;
-      color: rgba(255, 255, 255, 0.78);
-      font-size: 24px;
-      font-weight: 300;
-      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease, color 0.2s ease;
-    }
-
-    .shortcut-item:active .add-btn-circle {
-      transform: scale(0.9);
-      border-color: rgba(255, 255, 255, 0.65);
-      color: #ffffff;
-    }
-
     .shortcut-title {
-      font-size: 12px;
-      color: rgba(248, 250, 252, 0.9);
+      font-size: calc(var(--shortcut-font-size) * var(--ui-scale));
+      color: rgba(248, 250, 252, 0.92);
       text-align: center;
       width: 100%;
       white-space: nowrap;
@@ -476,9 +452,7 @@
       z-index: 100;
     }
 
-    .modal-overlay.active {
-      display: flex;
-    }
+    .modal-overlay.active { display: flex; }
 
     .modal-card {
       width: 100%;
@@ -494,52 +468,39 @@
     }
 
     .modal-card h2 {
-      font-size: 17px;
+      font-size: calc(17px * var(--ui-scale));
       margin-bottom: 18px;
       font-weight: 600;
     }
 
-    .form-group {
-      margin-bottom: 16px;
-    }
+    .form-group { margin-bottom: 16px; }
 
     .form-group label {
       display: block;
-      font-size: 13px;
+      font-size: calc(13px * var(--ui-scale));
       color: var(--text-sub);
       margin-bottom: 8px;
     }
 
-    .form-input {
+    .form-input,
+    .select-input {
       width: 100%;
-      padding: 11px 14px;
+      padding: 10px 13px;
       border-radius: 12px;
       border: 1px solid rgba(255, 255, 255, 0.14);
-      background: rgba(0, 0, 0, 0.55);
+      background: rgba(0, 0, 0, 0.6);
       color: #fff;
-      font-size: 14px;
+      font-size: calc(13.5px * var(--ui-scale));
       outline: none;
     }
 
-    .form-input:focus {
-      border-color: #60a5fa;
-    }
+    .form-input:focus,
+    .select-input:focus { border-color: #60a5fa; }
 
     .grid-setting-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-    }
-
-    .select-input {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      background: rgba(0, 0, 0, 0.65);
-      color: #fff;
-      font-size: 13.5px;
-      outline: none;
     }
 
     .icon-picker-row {
@@ -559,21 +520,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 11px;
+      font-size: calc(11px * var(--ui-scale));
       color: var(--text-sub);
     }
 
-    .icon-preview img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+    .icon-preview img { width: 100%; height: 100%; object-fit: cover; }
 
-    .icon-picker-btns {
-      display: flex;
-      flex: 1;
-      gap: 8px;
-    }
+    .icon-picker-btns { display: flex; flex: 1; gap: 8px; }
 
     .btn-small {
       flex: 1;
@@ -582,12 +535,12 @@
       border: 1px solid rgba(255, 255, 255, 0.14);
       background: rgba(255, 255, 255, 0.08);
       color: var(--text-main);
-      font-size: 12px;
+      font-size: calc(12px * var(--ui-scale));
       cursor: pointer;
     }
 
     .hint-text {
-      font-size: 12px;
+      font-size: calc(12px * var(--ui-scale));
       color: var(--text-sub);
       line-height: 1.55;
       margin-bottom: 18px;
@@ -602,22 +555,66 @@
     .range-row input[type="range"] {
       flex: 1;
       accent-color: #60a5fa;
-    }
-
-    .radio-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 6px;
-    }
-
-    .radio-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
       cursor: pointer;
     }
+
+    .toggle-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      margin-bottom: 14px;
+    }
+
+    .toggle-title { font-size: calc(13.5px * var(--ui-scale)); color: var(--text-main); font-weight: 500; }
+    .toggle-desc { font-size: calc(11.5px * var(--ui-scale)); color: var(--text-sub); margin-top: 2px; }
+
+    .switch-input {
+      width: 44px;
+      height: 24px;
+      appearance: none;
+      -webkit-appearance: none;
+      background: rgba(148, 163, 184, 0.35);
+      border-radius: 999px;
+      position: relative;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s ease;
+    }
+
+    .switch-input:checked { background: #3b82f6; }
+
+    .switch-input::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ffffff;
+      transition: transform 0.2s ease;
+    }
+
+    .switch-input:checked::after { transform: translateX(20px); }
+
+    .device-status-box {
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: calc(12px * var(--ui-scale));
+      color: #cbd5e1;
+      margin-bottom: 14px;
+      line-height: 1.55;
+    }
+
+    .radio-group { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+    .radio-label { display: flex; align-items: center; gap: 8px; font-size: calc(13px * var(--ui-scale)); cursor: pointer; }
 
     .btn-row {
       display: flex;
@@ -630,20 +627,13 @@
       padding: 10px 16px;
       border-radius: 12px;
       border: none;
-      font-size: 13.5px;
+      font-size: calc(13.5px * var(--ui-scale));
       cursor: pointer;
       font-weight: 500;
     }
 
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--text-main);
-    }
-
-    .btn-primary {
-      background: #3b82f6;
-      color: #fff;
-    }
+    .btn-secondary { background: rgba(255, 255, 255, 0.1); color: var(--text-main); }
+    .btn-primary { background: #3b82f6; color: #fff; }
 
     .btn-full {
       width: 100%;
@@ -658,45 +648,34 @@
       background: rgba(255, 255, 255, 0.1);
       margin: 16px 0;
     }
-
-    @media (max-width: 600px) {
-      body {
-        padding: 18px 14px 5vh 14px;
-      }
-      header {
-        margin-bottom: 28px;
-      }
-      .brand-signature {
-        font-size: 34px;
-      }
-    }
   </style>
 </head>
 <body>
+  <div class="brightness-overlay" id="brightnessOverlay" aria-hidden="true"></div>
 
-  <div class="page-wrapper">
+  <div class="page-wrapper" id="pageWrapper">
     <header>
       <div class="brand-signature">Wei-Fan's homepage</div>
     </header>
 
     <main>
       <div class="top-profile-row">
-        <div class="avatar-container">
-          <div class="avatar-wrapper" id="avatarBox" title="點擊更換個人頭像">
-            <img id="avatarImg" src="" alt="個人頭像" />
-          </div>
+        <div class="avatar-wrapper" id="avatarBox" title="點擊更換個人頭像">
+          <img id="avatarImg" src="" alt="個人頭像" />
         </div>
 
         <div class="menu-wrapper" id="menuWrapper">
-          <button class="hamburger-btn" id="hamburgerBtn" aria-label="開啟選單" title="功能選單">
+          <button type="button" class="hamburger-btn" id="hamburgerBtn" aria-label="開啟選單" title="功能選單">
             <span class="hamburger-line"></span>
             <span class="hamburger-line"></span>
             <span class="hamburger-line"></span>
           </button>
           <div class="dropdown-menu" id="dropdownMenu">
-            <button class="menu-item-btn" id="settingsBtn">首頁設定</button>
-            <button class="menu-item-btn" id="bgBtn">更換背景</button>
-            <button class="menu-item-btn" id="toggleAddShortcutBtn">隱藏新增捷徑按鈕</button>
+            <button type="button" class="menu-item-btn" id="settingsBtn">首頁設定</button>
+            <button type="button" class="menu-item-btn" id="bgBtn">更換背景</button>
+            <button type="button" class="menu-item-btn" id="brightnessBtn">亮度調整</button>
+            <button type="button" class="menu-item-btn" id="pageSizeBtn">頁面尺寸</button>
+            <button type="button" class="menu-item-btn" id="toggleAddShortcutBtn">新增按鈕</button>
           </div>
         </div>
       </div>
@@ -704,7 +683,7 @@
       <form class="search-box" id="searchForm">
         <span class="search-icon">⌕</span>
         <input type="text" class="search-input" id="searchInput" placeholder="搜尋 Google，或輸入關鍵字" autocomplete="off" />
-        <button type="submit" class="search-submit">↵</button>
+        <button type="submit" class="search-submit" aria-label="搜尋">↵</button>
       </form>
 
       <div class="edit-banner" id="editBanner">
@@ -721,6 +700,7 @@
   <input type="file" id="shortcutIconFileInput" accept="image/*" style="display: none;" />
   <input type="file" id="importJsonFileInput" accept=".json,application/json" style="display: none;" />
 
+  <!-- 新增 / 編輯捷徑彈窗 -->
   <div class="modal-overlay" id="addModal">
     <div class="modal-card">
       <h2 id="modalTitle">新增圓形捷徑</h2>
@@ -742,59 +722,122 @@
           </div>
         </div>
       </div>
-      <p class="hint-text">若未自訂圖片，系統會自動抓取網站高解析度圓形圖示，並自動填滿邊緣。</p>
+      <p class="hint-text">若未自訂圖片，系統會自動抓取網站高解析度圓形圖示。</p>
       <div class="btn-row">
-        <button class="btn btn-secondary" id="cancelAddBtn">取消</button>
-        <button class="btn btn-primary" id="saveAddBtn">儲存捷徑</button>
+        <button type="button" class="btn btn-secondary" data-close-modal="addModal">取消</button>
+        <button type="button" class="btn btn-primary" id="saveAddBtn">儲存捷徑</button>
       </div>
     </div>
   </div>
 
+  <!-- 亮度調整彈窗（30% ~ 120%） -->
+  <div class="modal-overlay" id="brightnessModal">
+    <div class="modal-card">
+      <h2>亮度調整</h2>
+      <div class="form-group">
+        <label>整體畫面明暗度：<span id="brightnessValueLabel">100</span>%</label>
+        <div class="range-row">
+          <span style="font-size:0.9em;">30%</span>
+          <input type="range" id="brightnessRange" min="30" max="120" step="1" value="100" />
+          <span style="font-size:0.9em;">120%</span>
+        </div>
+      </div>
+      <p class="hint-text">
+        低於 100% 時會疊加柔和暗化遮罩，解決過亮桌布導致白色文字或圖示看不清楚的問題；高於 100% 則會適度提亮畫面，數值自動儲存。
+      </p>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" id="resetBrightnessBtn">重設 100%</button>
+        <button type="button" class="btn btn-primary" data-close-modal="brightnessModal">完成</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 頁面尺寸彈窗（自動適應 + 手動縮放 70% ~ 130%） -->
+  <div class="modal-overlay" id="pageSizeModal">
+    <div class="modal-card">
+      <h2>頁面尺寸</h2>
+
+      <div class="toggle-card">
+        <div>
+          <div class="toggle-title">自動適應模式</div>
+          <div class="toggle-desc">依裝置寬高與橫／直向自動計算最佳容器寬度與縮放比例</div>
+        </div>
+        <input type="checkbox" class="switch-input" id="autoScaleToggle" checked />
+      </div>
+
+      <div class="device-status-box" id="deviceScaleInfo">偵測中...</div>
+
+      <div class="form-group" id="manualScaleGroup">
+        <label>手動比例滑桿：<span id="manualScaleLabel">100</span>%</label>
+        <div class="range-row">
+          <span style="font-size:0.9em;">70%</span>
+          <input type="range" id="manualScaleRange" min="70" max="130" step="1" value="100" />
+          <span style="font-size:0.9em;">130%</span>
+        </div>
+      </div>
+
+      <p class="hint-text">
+        關閉「自動適應模式」後，可針對當前裝置自由微調簽名、頭像、搜尋列與捷徑區的整體視覺大小。
+      </p>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" id="resetPageSizeBtn">恢復預設</button>
+        <button type="button" class="btn btn-primary" data-close-modal="pageSizeModal">完成</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 首頁設定彈窗 -->
   <div class="modal-overlay" id="settingsModal">
-    <div class="modal-card" id="settingsModalCard">
+    <div class="modal-card">
       <h2>首頁設定</h2>
 
       <div class="form-group">
         <label>捷徑排列行數與列數（每排欄數 × 顯示列數）</label>
         <div class="grid-setting-row">
-          <div>
-            <select id="gridColsSelect" class="select-input">
-              <option value="3">每排 3 個（3 欄）</option>
-              <option value="4">每排 4 個（4 欄）</option>
-              <option value="5" selected>每排 5 個（5 欄）</option>
-              <option value="6">每排 6 個（6 欄）</option>
-              <option value="7">每排 7 個（7 欄）</option>
-              <option value="8">每排 8 個（8 欄）</option>
-            </select>
-          </div>
-          <div>
-            <select id="gridRowsSelect" class="select-input">
-              <option value="0" selected>不限列數（自動換行）</option>
-              <option value="1">最多顯示 1 列</option>
-              <option value="2">最多顯示 2 列</option>
-              <option value="3">最多顯示 3 列</option>
-              <option value="4">最多顯示 4 列</option>
-            </select>
-          </div>
+          <select id="gridColsSelect" class="select-input">
+            <option value="3">每排 3 個（3 欄）</option>
+            <option value="4">每排 4 個（4 欄）</option>
+            <option value="5" selected>每排 5 個（5 欄）</option>
+            <option value="6">每排 6 個（6 欄）</option>
+            <option value="7">每排 7 個（7 欄）</option>
+            <option value="8">每排 8 個（8 欄）</option>
+          </select>
+          <select id="gridRowsSelect" class="select-input">
+            <option value="0" selected>不限列數（自動換行）</option>
+            <option value="1">最多顯示 1 列</option>
+            <option value="2">最多顯示 2 列</option>
+            <option value="3">最多顯示 3 列</option>
+            <option value="4">最多顯示 4 列</option>
+          </select>
         </div>
       </div>
 
       <div class="form-group">
         <label>個人頭像設定</label>
-        <button class="btn btn-full" id="uploadAvatarBtn">從相簿選擇個人頭像</button>
+        <button type="button" class="btn btn-full" id="uploadAvatarBtn">從相簿選擇個人頭像</button>
         <div class="range-row">
-          <span style="font-size:12px;">小</span>
+          <span style="font-size:0.9em;">小</span>
           <input type="range" id="avatarSizeRange" min="64" max="140" value="100" />
-          <span style="font-size:12px;">大</span>
+          <span style="font-size:0.9em;">大</span>
         </div>
       </div>
 
       <div class="form-group">
-        <label>所有捷徑圖示大小：<span id="iconSizeLabel">58</span> px</label>
+        <label>所有捷徑圖示基準大小：<span id="iconSizeLabel">58</span> px</label>
         <div class="range-row">
-          <span style="font-size:12px;">小</span>
+          <span style="font-size:0.9em;">小</span>
           <input type="range" id="iconSizeRange" min="40" max="84" value="58" />
-          <span style="font-size:12px;">大</span>
+          <span style="font-size:0.9em;">大</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>字體大小：<span id="fontSizeLabel">12</span> px</label>
+        <div class="range-row">
+          <span style="font-size:0.9em;">10px</span>
+          <input type="range" id="fontSizeRange" min="10" max="20" step="1" value="12" />
+          <span style="font-size:0.9em;">20px</span>
         </div>
       </div>
 
@@ -812,12 +855,12 @@
         </div>
       </div>
 
-      <button class="btn btn-full" id="resetBgBtn">恢復純黑極簡背景</button>
+      <button type="button" class="btn btn-full" id="resetBgBtn">恢復純黑極簡背景</button>
 
       <div class="divider-line"></div>
 
       <div class="form-group">
-        <label>匯出 / 匯入記憶（完整備份捷徑、頭像與背景設定）</label>
+        <label>匯出 / 匯入記憶（完整備份捷徑、頭像、背景、亮度與尺寸設定）</label>
         <div class="grid-setting-row">
           <button type="button" class="btn btn-full" id="exportDataBtn" style="margin-bottom:0;">匯出設定檔</button>
           <button type="button" class="btn btn-full" id="importDataBtn" style="margin-bottom:0;">匯入設定檔</button>
@@ -825,7 +868,7 @@
       </div>
 
       <div class="btn-row">
-        <button class="btn btn-primary" id="closeSettingsBtn" style="width:100%;">完成</button>
+        <button type="button" class="btn btn-primary" data-close-modal="settingsModal" style="width:100%;">完成</button>
       </div>
     </div>
   </div>
@@ -836,21 +879,70 @@
     );
 
     const STORAGE_KEY = 'sual_shortcuts_v3_clean';
+    const ALLOWED_BACKUP_KEYS = new Set([
+      STORAGE_KEY,
+      'sual_grid_cols',
+      'sual_grid_rows',
+      'sual_show_add_shortcut',
+      'sual_brightness',
+      'sual_auto_scale',
+      'sual_manual_scale',
+      'sual_icon_size',
+      'sual_font_size',
+      'sual_avatar_size',
+      'sual_avatar',
+      'sual_bg',
+      'sual_bg_fit'
+    ]);
+
     let shortcuts = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
     let isEditMode = false;
     let editingIndex = -1;
     let tempCustomIcon = '';
     let dragSrcIndex = null;
+    let lastLayoutSignature = '';
+
     let gridCols = parseInt(localStorage.getItem('sual_grid_cols')) || 5;
     let gridRows = parseInt(localStorage.getItem('sual_grid_rows')) || 0;
     let showAddShortcut = localStorage.getItem('sual_show_add_shortcut') !== 'false';
+    let brightnessPercent = clampNum(parseInt(localStorage.getItem('sual_brightness')), 30, 120, 100);
+    let autoScaleEnabled = localStorage.getItem('sual_auto_scale') !== 'false';
+    let manualScalePercent = clampNum(parseInt(localStorage.getItem('sual_manual_scale')), 70, 130, 100);
+    let globalFontSize = clampNum(parseInt(localStorage.getItem('sual_font_size')), 10, 20, 12);
+    let currentScale = 1;
 
-    const grid = document.getElementById('shortcutsGrid');
-    const toggleAddShortcutBtn = document.getElementById('toggleAddShortcutBtn');
-    const menuWrapper = document.getElementById('menuWrapper');
-    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const $ = (id) => document.getElementById(id);
+    const grid = $('shortcutsGrid');
+    const menuWrapper = $('menuWrapper');
+    const pageWrapper = $('pageWrapper');
+    const brightnessOverlay = $('brightnessOverlay');
+    const brightnessRange = $('brightnessRange');
+    const brightnessValueLabel = $('brightnessValueLabel');
+    const autoScaleToggle = $('autoScaleToggle');
+    const manualScaleRange = $('manualScaleRange');
+    const manualScaleLabel = $('manualScaleLabel');
+    const manualScaleGroup = $('manualScaleGroup');
+    const deviceScaleInfo = $('deviceScaleInfo');
+    const fontSizeRange = $('fontSizeRange');
+    const fontSizeLabel = $('fontSizeLabel');
 
-    hamburgerBtn.addEventListener('click', (e) => {
+    function clampNum(val, min, max, fallback) {
+      return Number.isFinite(val) ? Math.min(max, Math.max(min, val)) : fallback;
+    }
+
+    function applyGlobalFontSize(val) {
+      const size = clampNum(parseInt(val), 10, 20, 12);
+      globalFontSize = size;
+      localStorage.setItem('sual_font_size', String(size));
+      fontSizeRange.value = String(size);
+      fontSizeLabel.textContent = String(size);
+      document.documentElement.style.setProperty('--shortcut-font-size', `${size}px`);
+      // 同步整體頁面文字比例（以 12px 為基準 1.0）
+      document.body.style.fontSize = `calc(${(size / 12).toFixed(4)} * 14px * var(--ui-scale))`;
+    }
+
+    // 漢堡選單開關
+    $('hamburgerBtn').addEventListener('click', (e) => {
       e.stopPropagation();
       menuWrapper.classList.toggle('open');
     });
@@ -861,31 +953,140 @@
       }
     });
 
-    function applyGridLayout() {
-      const screenWidth = window.innerWidth;
-      const isPortrait = screenWidth < 600;
-      const effectiveCols = isPortrait && gridCols > 5 ? 5 : gridCols;
+    // 統一彈窗關閉（點擊背景或 data-close-modal 按鈕）
+    document.querySelectorAll('.modal-overlay').forEach((overlay) => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.classList.remove('active');
+      });
+    });
+
+    document.querySelectorAll('[data-close-modal]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        $(btn.dataset.closeModal).classList.remove('active');
+      });
+    });
+
+    // 1. 亮度調整（30% ~ 120%）
+    function applyBrightness(val) {
+      const level = clampNum(parseInt(val), 30, 120, 100);
+      brightnessPercent = level;
+      localStorage.setItem('sual_brightness', String(level));
+      brightnessRange.value = String(level);
+      brightnessValueLabel.textContent = String(level);
+
+      if (level < 100) {
+        const darkAlpha = ((100 - level) / 100) * 0.9;
+        brightnessOverlay.style.backgroundColor = `rgba(0, 0, 0, ${darkAlpha.toFixed(3)})`;
+        pageWrapper.style.filter = 'none';
+      } else if (level > 100) {
+        brightnessOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+        const boost = 1 + ((level - 100) / 20) * 0.2;
+        pageWrapper.style.filter = `brightness(${boost.toFixed(2)})`;
+      } else {
+        brightnessOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+        pageWrapper.style.filter = 'none';
+      }
+    }
+
+    // 2. 頁面尺寸（自動適應 + 手動比例 70% ~ 130%）
+    function getDeviceMetrics() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const isLandscape = w >= h;
+      const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+      let profileName = '電腦橫向';
+      let baseContentWidth = 560;
+      let baseWrapperWidth = 920;
+      let autoScale = 1.0;
+
+      if (!isLandscape && w < 640) {
+        profileName = '手機直向';
+        baseWrapperWidth = Math.min(w, 460);
+        baseContentWidth = Math.min(w - 28, 430);
+        autoScale = clampNum(Number((w / 390).toFixed(2)), 0.88, 1.08, 1);
+      } else if (!isLandscape && w >= 640) {
+        profileName = '平板直向';
+        baseWrapperWidth = Math.min(w - 32, 720);
+        baseContentWidth = Math.min(w - 48, 600);
+        autoScale = clampNum(Number((w / 768).toFixed(2)), 0.95, 1.15, 1.04);
+      } else if (isLandscape && (w <= 1024 || isTouch)) {
+        profileName = '平板橫向';
+        baseWrapperWidth = Math.min(w - 48, 960);
+        baseContentWidth = Math.min(w - 72, 640);
+        autoScale = clampNum(Number((Math.min(w / 1024, h / 720)).toFixed(2)), 0.92, 1.15, 1.03);
+      } else {
+        profileName = '電腦橫向';
+        baseWrapperWidth = Math.min(w - 64, 1040);
+        baseContentWidth = Math.min(w - 96, 620);
+        autoScale = clampNum(Number((Math.min(w / 1440, h / 900)).toFixed(2)), 0.88, 1.18, 1.0);
+      }
+
+      return {
+        profileName,
+        orientationLabel: isLandscape ? '橫向' : '直向',
+        w,
+        h,
+        baseWrapperWidth,
+        baseContentWidth,
+        autoScale
+      };
+    }
+
+    function applyLayoutAndScale(forceRender = false) {
+      const m = getDeviceMetrics();
+      currentScale = autoScaleEnabled ? m.autoScale : (manualScalePercent / 100);
+
+      const safeMaxViewport = m.w - 24;
+      const contentWidth = Math.min(safeMaxViewport, Math.round(m.baseContentWidth * currentScale));
+      const wrapperWidth = Math.min(m.w, Math.round(m.baseWrapperWidth * currentScale));
+
+      const isPortraitPhone = !(m.w >= m.h) && m.w < 600;
+      const effectiveCols = (isPortraitPhone && gridCols > 5) ? 5 : gridCols;
+
+      const baseGridWidth = Math.max(m.baseContentWidth, Math.min(760, effectiveCols * 112));
+      const gridMaxWidth = Math.min(safeMaxViewport, Math.round(baseGridWidth * currentScale));
 
       const baseIconSize = parseInt(localStorage.getItem('sual_icon_size')) || 58;
-      const availableWidth = Math.min(screenWidth - 32, 740);
-      const cellWidth = availableWidth / effectiveCols;
-
-      const maxAllowedIcon = Math.max(36, Math.floor(cellWidth * 0.68));
-      const computedIconSize = Math.min(baseIconSize, maxAllowedIcon);
+      const desiredIconSize = Math.round(baseIconSize * currentScale);
+      const cellWidth = gridMaxWidth / effectiveCols;
+      const maxAllowedIcon = Math.max(34, Math.floor(cellWidth * 0.72));
+      const finalIconSize = Math.min(desiredIconSize, maxAllowedIcon);
 
       const gapX = effectiveCols >= 7 ? 8 : (effectiveCols >= 5 ? 14 : 20);
       const gapY = gridRows >= 3 ? 18 : 24;
-      const maxWidth = Math.min(760, effectiveCols * 112);
 
-      document.documentElement.style.setProperty('--grid-cols', effectiveCols);
-      document.documentElement.style.setProperty('--grid-max-width', maxWidth + 'px');
-      document.documentElement.style.setProperty('--grid-gap-x', gapX + 'px');
-      document.documentElement.style.setProperty('--grid-gap-y', gapY + 'px');
-      document.documentElement.style.setProperty('--icon-size', computedIconSize + 'px');
+      const rootStyle = document.documentElement.style;
+      rootStyle.setProperty('--ui-scale', String(currentScale));
+      rootStyle.setProperty('--wrapper-max-width', `${wrapperWidth}px`);
+      rootStyle.setProperty('--content-max-width', `${contentWidth}px`);
+      rootStyle.setProperty('--grid-max-width', `${gridMaxWidth}px`);
+      rootStyle.setProperty('--grid-cols', String(effectiveCols));
+      rootStyle.setProperty('--grid-gap-x', `${gapX}px`);
+      rootStyle.setProperty('--grid-gap-y', `${gapY}px`);
+      rootStyle.setProperty('--icon-size', `${finalIconSize}px`);
+      document.body.style.fontSize = `calc(${(globalFontSize / 12).toFixed(4)} * 14px * var(--ui-scale))`;
+
+      autoScaleToggle.checked = autoScaleEnabled;
+      manualScaleRange.value = String(manualScalePercent);
+      manualScaleLabel.textContent = String(manualScalePercent);
+      manualScaleRange.disabled = autoScaleEnabled;
+      manualScaleGroup.style.opacity = autoScaleEnabled ? '0.48' : '1';
+
+      deviceScaleInfo.innerHTML =
+        `目前模式：<strong>${autoScaleEnabled ? '自動適應' : '手動縮放'}</strong>（${Math.round(currentScale * 100)}%）<br>` +
+        `裝置偵測：${m.profileName}・${m.orientationLabel}（${m.w} × ${m.h} px）`;
+
+      const signature = `${effectiveCols}-${gridRows}-${showAddShortcut}`;
+      if (forceRender || signature !== lastLayoutSignature) {
+        lastLayoutSignature = signature;
+        renderShortcuts();
+      }
     }
 
-    window.addEventListener('resize', () => {
-      applyGridLayout();
+    window.addEventListener('resize', () => applyLayoutAndScale(false));
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => applyLayoutAndScale(false), 120);
     });
 
     function getHighResIcon(url) {
@@ -897,30 +1098,11 @@
       }
     }
 
-    function autoFitIcon(img) {
-      try {
-        const canvas = document.createElement('canvas');
-        const size = 64;
-        canvas.width = size;
-        canvas.height = size;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, size, size);
-        const cornerAlpha = ctx.getImageData(2, 2, 1, 1).data[3];
-        const edgeAlpha = ctx.getImageData(32, 3, 1, 1).data[3];
-        if (cornerAlpha < 50 && edgeAlpha < 50) {
-          img.style.transform = 'scale(1.22)';
-        }
-      } catch (e) {
-        img.style.transform = 'scale(1.06)';
-      }
-    }
-
     function swapShortcuts(fromIndex, toIndex) {
       if (fromIndex === null || toIndex === null || fromIndex === toIndex) return;
       if (fromIndex < 0 || toIndex < 0 || fromIndex >= shortcuts.length || toIndex >= shortcuts.length) return;
-      const temp = shortcuts[fromIndex];
-      shortcuts[fromIndex] = shortcuts[toIndex];
-      shortcuts[toIndex] = temp;
+      const [moved] = shortcuts.splice(fromIndex, 1);
+      shortcuts.splice(toIndex, 0, moved);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(shortcuts));
       renderShortcuts();
     }
@@ -935,42 +1117,36 @@
     function renderShortcuts() {
       grid.innerHTML = '';
 
-      const screenWidth = window.innerWidth;
-      const effectiveCols = (screenWidth < 600 && gridCols > 5) ? 5 : gridCols;
-      const maxSlots = (!isEditMode && gridRows > 0) ? (effectiveCols * gridRows) : Infinity;
-
-      const visibleShortcuts = (!isEditMode && maxSlots < Infinity)
-        ? shortcuts.slice(0, Math.max(0, maxSlots - (showAddShortcut ? 1 : 0)))
+      const effectiveCols = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--grid-cols')) || gridCols;
+      const maxSlots = gridRows > 0 ? (effectiveCols * gridRows) : Infinity;
+      const reserveAddSlot = (showAddShortcut && maxSlots < Infinity) ? 1 : 0;
+      const visibleShortcuts = maxSlots < Infinity
+        ? shortcuts.slice(0, Math.max(0, maxSlots - reserveAddSlot))
         : shortcuts;
 
       visibleShortcuts.forEach((item, index) => {
         const a = document.createElement('a');
         a.className = 'shortcut-item';
         a.href = isEditMode ? 'javascript:void(0)' : item.url;
-        a.dataset.index = index;
+        a.dataset.index = String(index);
         a.dataset.draggable = 'true';
-        if (isEditMode) {
-          a.setAttribute('draggable', 'true');
-        }
+        if (isEditMode) a.setAttribute('draggable', 'true');
 
         let domain = '';
         try { domain = new URL(item.url).hostname; } catch (e) {}
         const fallbackUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=256`;
-        const iconSrc = item.customIcon ? item.customIcon : getHighResIcon(item.url);
+        const iconSrc = item.customIcon || getHighResIcon(item.url);
 
         a.innerHTML = `
-          <div class="badge-btn edit-badge" title="編輯">✎</div>
-          <div class="badge-btn delete-badge" title="刪除">✕</div>
+          <button type="button" class="badge-btn edit-badge" title="編輯">✎</button>
+          <button type="button" class="badge-btn delete-badge" title="刪除">✕</button>
           <div class="shortcut-icon">
-            <img src="${iconSrc}" crossorigin="anonymous" alt="${item.name}" />
+            <img src="${iconSrc}" alt="${item.name}" />
           </div>
           <span class="shortcut-title">${item.name}</span>
         `;
 
         const imgEl = a.querySelector('img');
-        imgEl.onload = () => {
-          if (!item.customIcon) autoFitIcon(imgEl);
-        };
         imgEl.onerror = () => {
           imgEl.onerror = null;
           imgEl.src = fallbackUrl;
@@ -996,9 +1172,15 @@
         let suppressClick = false;
         let isTouchDragging = false;
 
+        const clearPress = () => {
+          if (pressTimer) {
+            clearTimeout(pressTimer);
+            pressTimer = null;
+          }
+        };
+
         a.addEventListener('mousedown', (e) => {
-          if (e.button !== 0 || isEditMode) return;
-          if (e.target.classList.contains('badge-btn')) return;
+          if (e.button !== 0 || isEditMode || e.target.closest('.badge-btn')) return;
           startX = e.clientX;
           startY = e.clientY;
           suppressClick = false;
@@ -1009,28 +1191,16 @@
         });
 
         a.addEventListener('mousemove', (e) => {
-          if (!pressTimer) return;
-          if (Math.abs(e.clientX - startX) > 8 || Math.abs(e.clientY - startY) > 8) {
-            clearTimeout(pressTimer);
-            pressTimer = null;
+          if (pressTimer && (Math.abs(e.clientX - startX) > 8 || Math.abs(e.clientY - startY) > 8)) {
+            clearPress();
           }
         });
 
-        a.addEventListener('mouseup', () => {
-          clearTimeout(pressTimer);
-          pressTimer = null;
-        });
-
-        a.addEventListener('mouseleave', () => {
-          clearTimeout(pressTimer);
-          pressTimer = null;
-        });
+        a.addEventListener('mouseup', clearPress);
+        a.addEventListener('mouseleave', clearPress);
 
         a.addEventListener('dragstart', (e) => {
-          if (!isEditMode) {
-            e.preventDefault();
-            return;
-          }
+          if (!isEditMode) return e.preventDefault();
           dragSrcIndex = index;
           a.classList.add('dragging');
           e.dataTransfer.effectAllowed = 'move';
@@ -1039,29 +1209,27 @@
         a.addEventListener('dragover', (e) => {
           if (!isEditMode) return;
           e.preventDefault();
-          e.dataTransfer.dropEffect = 'move';
           a.classList.add('drag-over');
         });
 
-        a.addEventListener('dragleave', () => {
-          a.classList.remove('drag-over');
-        });
+        a.addEventListener('dragleave', () => a.classList.remove('drag-over'));
 
         a.addEventListener('drop', (e) => {
           if (!isEditMode) return;
           e.preventDefault();
           a.classList.remove('drag-over');
-          swapShortcuts(dragSrcIndex, index);
+          const src = dragSrcIndex;
           dragSrcIndex = null;
+          swapShortcuts(src, index);
         });
 
         a.addEventListener('dragend', () => {
           a.classList.remove('dragging');
-          document.querySelectorAll('.shortcut-item').forEach(el => el.classList.remove('drag-over'));
+          document.querySelectorAll('.shortcut-item').forEach((el) => el.classList.remove('drag-over'));
         });
 
         a.addEventListener('touchstart', (e) => {
-          if (e.target.classList.contains('badge-btn')) return;
+          if (e.target.closest('.badge-btn')) return;
           const touch = e.touches[0];
           startX = touch.clientX;
           startY = touch.clientY;
@@ -1084,51 +1252,42 @@
           const touch = e.touches[0];
           if (!isEditMode) {
             if (Math.abs(touch.clientX - startX) > 10 || Math.abs(touch.clientY - startY) > 10) {
-              clearTimeout(pressTimer);
-              pressTimer = null;
+              clearPress();
             }
             return;
           }
-
           if (!isTouchDragging) return;
           e.preventDefault();
           const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
           const targetItem = targetEl ? targetEl.closest('.shortcut-item[data-draggable="true"]') : null;
-          document.querySelectorAll('.shortcut-item').forEach(el => el.classList.remove('drag-over'));
+          document.querySelectorAll('.shortcut-item').forEach((el) => el.classList.remove('drag-over'));
           if (targetItem && parseInt(targetItem.dataset.index) !== index) {
             targetItem.classList.add('drag-over');
           }
         }, { passive: false });
 
         a.addEventListener('touchend', (e) => {
-          clearTimeout(pressTimer);
-          pressTimer = null;
+          clearPress();
           if (!isTouchDragging) return;
-
+          isTouchDragging = false;
           const touch = e.changedTouches[0];
           const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
           const targetItem = targetEl ? targetEl.closest('.shortcut-item[data-draggable="true"]') : null;
           a.classList.remove('dragging');
-          document.querySelectorAll('.shortcut-item').forEach(el => el.classList.remove('drag-over'));
-
+          document.querySelectorAll('.shortcut-item').forEach((el) => el.classList.remove('drag-over'));
           if (targetItem) {
-            const targetIndex = parseInt(targetItem.dataset.index);
-            swapShortcuts(index, targetIndex);
+            swapShortcuts(index, parseInt(targetItem.dataset.index));
           }
-          isTouchDragging = false;
         });
 
         a.addEventListener('touchcancel', () => {
-          clearTimeout(pressTimer);
-          pressTimer = null;
+          clearPress();
           isTouchDragging = false;
           a.classList.remove('dragging');
-          document.querySelectorAll('.shortcut-item').forEach(el => el.classList.remove('drag-over'));
+          document.querySelectorAll('.shortcut-item').forEach((el) => el.classList.remove('drag-over'));
         });
 
-        a.addEventListener('contextmenu', (e) => {
-          e.preventDefault();
-        });
+        a.addEventListener('contextmenu', (e) => e.preventDefault());
 
         a.addEventListener('click', (e) => {
           if (suppressClick || isEditMode) {
@@ -1153,44 +1312,27 @@
     }
 
     function updateIconPreview(src) {
-      const box = document.getElementById('iconPreviewBox');
-      if (src) {
-        box.innerHTML = `<img src="${src}" alt="預覽" />`;
-      } else {
-        box.innerHTML = '自動';
-      }
+      $('iconPreviewBox').innerHTML = src ? `<img src="${src}" alt="預覽" />` : '自動';
     }
 
     function openShortcutModal(index) {
       editingIndex = index;
-      const modalTitle = document.getElementById('modalTitle');
-      const nameInput = document.getElementById('siteNameInput');
-      const urlInput = document.getElementById('siteUrlInput');
-
-      if (index >= 0) {
-        modalTitle.textContent = '編輯捷徑';
-        nameInput.value = shortcuts[index].name;
-        urlInput.value = shortcuts[index].url;
-        tempCustomIcon = shortcuts[index].customIcon || '';
-      } else {
-        modalTitle.textContent = '新增圓形捷徑';
-        nameInput.value = '';
-        urlInput.value = '';
-        tempCustomIcon = '';
-      }
-
+      const isEdit = index >= 0;
+      $('modalTitle').textContent = isEdit ? '編輯捷徑' : '新增圓形捷徑';
+      $('siteNameInput').value = isEdit ? shortcuts[index].name : '';
+      $('siteUrlInput').value = isEdit ? shortcuts[index].url : '';
+      tempCustomIcon = isEdit ? (shortcuts[index].customIcon || '') : '';
       updateIconPreview(tempCustomIcon);
-      document.getElementById('addModal').classList.add('active');
+      $('addModal').classList.add('active');
     }
 
-    const shortcutIconFileInput = document.getElementById('shortcutIconFileInput');
-    document.getElementById('pickShortcutIconBtn').addEventListener('click', () => shortcutIconFileInput.click());
-    document.getElementById('resetShortcutIconBtn').addEventListener('click', () => {
+    $('pickShortcutIconBtn').addEventListener('click', () => $('shortcutIconFileInput').click());
+    $('resetShortcutIconBtn').addEventListener('click', () => {
       tempCustomIcon = '';
       updateIconPreview('');
     });
 
-    shortcutIconFileInput.addEventListener('change', (e) => {
+    $('shortcutIconFileInput').addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
       compressImage(file, 256, 0.9, true, (dataUrl) => {
@@ -1200,31 +1342,27 @@
       e.target.value = '';
     });
 
-    document.getElementById('searchForm').addEventListener('submit', (e) => {
+    // 搜尋列提交（嚴謹網址判斷，避免一般關鍵字誤跳轉）
+    $('searchForm').addEventListener('submit', (e) => {
       e.preventDefault();
-      const q = document.getElementById('searchInput').value.trim();
+      const q = $('searchInput').value.trim();
       if (!q) return;
-      if (/^(http:\/\/|https:\/\/)/i.test(q)) {
+      if (/^https?:\/\/\S+/i.test(q)) {
         window.location.href = q;
-      } else if (/^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}/.test(q)) {
+      } else if (!/\s/.test(q) && /^(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.(com|org|net|edu|gov|io|tw|jp|kr|co|me|app|dev|ai|tv|cc|info|biz)(\/.*)?$/i.test(q)) {
         window.location.href = 'https://' + q;
       } else {
         window.location.href = `https://www.google.com/search?q=${encodeURIComponent(q)}`;
       }
     });
 
-    const bannerDoneBtn = document.getElementById('bannerDoneBtn');
-    bannerDoneBtn.addEventListener('click', () => {
-      setEditMode(false);
-    });
+    $('bannerDoneBtn').addEventListener('click', () => setEditMode(false));
 
     function updateAddShortcutToggleLabel() {
-      toggleAddShortcutBtn.textContent = showAddShortcut
-        ? '隱藏新增捷徑按鈕'
-        : '顯示新增捷徑按鈕';
+      $('toggleAddShortcutBtn').textContent = showAddShortcut ? '新增按鈕（顯示中）' : '新增按鈕（已隱藏）';
     }
 
-    toggleAddShortcutBtn.addEventListener('click', () => {
+    $('toggleAddShortcutBtn').addEventListener('click', () => {
       showAddShortcut = !showAddShortcut;
       localStorage.setItem('sual_show_add_shortcut', String(showAddShortcut));
       updateAddShortcutToggleLabel();
@@ -1232,13 +1370,51 @@
       renderShortcuts();
     });
 
-    document.getElementById('cancelAddBtn').addEventListener('click', () => {
-      document.getElementById('addModal').classList.remove('active');
+    // 亮度調整選單與事件
+    $('brightnessBtn').addEventListener('click', () => {
+      menuWrapper.classList.remove('open');
+      brightnessRange.value = String(brightnessPercent);
+      brightnessValueLabel.textContent = String(brightnessPercent);
+      $('brightnessModal').classList.add('active');
     });
 
-    document.getElementById('saveAddBtn').addEventListener('click', () => {
-      const name = document.getElementById('siteNameInput').value.trim();
-      let url = document.getElementById('siteUrlInput').value.trim();
+    brightnessRange.addEventListener('input', (e) => applyBrightness(e.target.value));
+    $('resetBrightnessBtn').addEventListener('click', () => applyBrightness(100));
+
+    // 頁面尺寸選單與事件
+    $('pageSizeBtn').addEventListener('click', () => {
+      menuWrapper.classList.remove('open');
+      applyLayoutAndScale(false);
+      $('pageSizeModal').classList.add('active');
+    });
+
+    autoScaleToggle.addEventListener('change', (e) => {
+      autoScaleEnabled = e.target.checked;
+      localStorage.setItem('sual_auto_scale', String(autoScaleEnabled));
+      applyLayoutAndScale(false);
+    });
+
+    manualScaleRange.addEventListener('input', (e) => {
+      manualScalePercent = clampNum(parseInt(e.target.value), 70, 130, 100);
+      localStorage.setItem('sual_manual_scale', String(manualScalePercent));
+      if (!autoScaleEnabled) {
+        applyLayoutAndScale(false);
+      } else {
+        manualScaleLabel.textContent = String(manualScalePercent);
+      }
+    });
+
+    $('resetPageSizeBtn').addEventListener('click', () => {
+      autoScaleEnabled = true;
+      manualScalePercent = 100;
+      localStorage.setItem('sual_auto_scale', 'true');
+      localStorage.setItem('sual_manual_scale', '100');
+      applyLayoutAndScale(false);
+    });
+
+    $('saveAddBtn').addEventListener('click', () => {
+      const name = $('siteNameInput').value.trim();
+      let url = $('siteUrlInput').value.trim();
       if (!name || !url) return alert('請輸入名稱與網址');
       if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
 
@@ -1250,7 +1426,7 @@
       }
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(shortcuts));
-      document.getElementById('addModal').classList.remove('active');
+      $('addModal').classList.remove('active');
       renderShortcuts();
     });
 
@@ -1260,16 +1436,14 @@
         const img = new Image();
         img.onload = () => {
           const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
+          let { width, height } = img;
           if (width > maxWidth) {
             height = Math.round((height * maxWidth) / width);
             width = maxWidth;
           }
           canvas.width = width;
           canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
           const mime = (keepPng && file.type === 'image/png') ? 'image/png' : 'image/jpeg';
           callback(canvas.toDataURL(mime, quality));
         };
@@ -1278,39 +1452,32 @@
       reader.readAsDataURL(file);
     }
 
-    const avatarFileInput = document.getElementById('avatarFileInput');
-    const avatarImg = document.getElementById('avatarImg');
+    const triggerAvatarUpload = () => $('avatarFileInput').click();
+    $('avatarBox').addEventListener('click', triggerAvatarUpload);
+    $('uploadAvatarBtn').addEventListener('click', triggerAvatarUpload);
 
-    function triggerAvatarUpload() {
-      avatarFileInput.click();
-    }
-
-    document.getElementById('avatarBox').addEventListener('click', triggerAvatarUpload);
-    document.getElementById('uploadAvatarBtn').addEventListener('click', triggerAvatarUpload);
-
-    avatarFileInput.addEventListener('change', (e) => {
+    $('avatarFileInput').addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
-      compressImage(file, 400, 0.88, false, (compressedDataUrl) => {
-        avatarImg.src = compressedDataUrl;
-        localStorage.setItem('sual_avatar', compressedDataUrl);
+      compressImage(file, 400, 0.88, false, (dataUrl) => {
+        $('avatarImg').src = dataUrl;
+        localStorage.setItem('sual_avatar', dataUrl);
       });
       e.target.value = '';
     });
 
-    const bgFileInput = document.getElementById('bgFileInput');
-    document.getElementById('bgBtn').addEventListener('click', () => {
+    $('bgBtn').addEventListener('click', () => {
       menuWrapper.classList.remove('open');
-      bgFileInput.click();
+      $('bgFileInput').click();
     });
 
-    bgFileInput.addEventListener('change', (e) => {
+    $('bgFileInput').addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
-      compressImage(file, 1600, 0.85, false, (compressedDataUrl) => {
-        document.body.style.backgroundImage = `url('${compressedDataUrl}')`;
+      compressImage(file, 1600, 0.85, false, (dataUrl) => {
+        document.body.style.backgroundImage = `url('${dataUrl}')`;
         try {
-          localStorage.setItem('sual_bg', compressedDataUrl);
+          localStorage.setItem('sual_bg', dataUrl);
         } catch (err) {
           alert('圖片檔案過大，已為您暫時套用，但重開瀏覽器可能不會保留。');
         }
@@ -1318,98 +1485,92 @@
       e.target.value = '';
     });
 
-    const settingsModal = document.getElementById('settingsModal');
-
-    document.getElementById('settingsBtn').addEventListener('click', () => {
+    $('settingsBtn').addEventListener('click', () => {
       menuWrapper.classList.remove('open');
-      settingsModal.classList.add('active');
+      $('settingsModal').classList.add('active');
     });
 
-    document.getElementById('closeSettingsBtn').addEventListener('click', () => settingsModal.classList.remove('active'));
-
-    document.querySelectorAll('.modal-overlay').forEach(overlay => {
-      overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) overlay.classList.remove('active');
-      });
-    });
-
-    document.getElementById('exportDataBtn').addEventListener('click', () => {
+    // JSON 完整備份匯出與白名單匯入
+    $('exportDataBtn').addEventListener('click', () => {
       const backupObj = {};
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        backupObj[key] = localStorage.getItem(key);
-      }
+      ALLOWED_BACKUP_KEYS.forEach((key) => {
+        const val = localStorage.getItem(key);
+        if (val !== null) backupObj[key] = val;
+      });
       const jsonStr = JSON.stringify(backupObj, null, 2);
-      const blob = new Blob([jsonStr], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
       const dateStr = new Date().toISOString().slice(0, 10);
-      a.href = url;
-      a.download = `homepage_backup_${dateStr}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      const filename = `homepage_backup_${dateStr}.json`;
+
+      try {
+        const blob = new Blob([jsonStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      } catch (err) {
+        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonStr);
+        window.open(dataUri, '_blank');
+      }
     });
 
-    const importJsonFileInput = document.getElementById('importJsonFileInput');
-    document.getElementById('importDataBtn').addEventListener('click', () => {
-      importJsonFileInput.click();
-    });
+    $('importDataBtn').addEventListener('click', () => $('importJsonFileInput').click());
 
-    importJsonFileInput.addEventListener('change', (e) => {
+    $('importJsonFileInput').addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
       reader.onload = (ev) => {
         try {
           const data = JSON.parse(ev.target.result);
-          if (typeof data !== 'object' || data === null) {
-            throw new Error('格式錯誤');
-          }
+          if (typeof data !== 'object' || data === null) throw new Error('格式錯誤');
+          let restoredCount = 0;
           Object.keys(data).forEach((k) => {
-            localStorage.setItem(k, data[k]);
+            if (ALLOWED_BACKUP_KEYS.has(k) && typeof data[k] === 'string') {
+              localStorage.setItem(k, data[k]);
+              restoredCount++;
+            }
           });
+          if (restoredCount === 0) throw new Error('無有效設定');
           alert('記憶匯入成功，即將重新載入首頁！');
           location.reload();
         } catch (err) {
-          alert('匯入失敗：檔案格式不正確或已損毀。');
+          alert('匯入失敗：檔案格式不正確或不含首頁設定。');
         }
       };
       reader.readAsText(file);
       e.target.value = '';
     });
 
-    const gridColsSelect = document.getElementById('gridColsSelect');
-    const gridRowsSelect = document.getElementById('gridRowsSelect');
-
-    gridColsSelect.addEventListener('change', (e) => {
+    $('gridColsSelect').addEventListener('change', (e) => {
       gridCols = parseInt(e.target.value);
-      localStorage.setItem('sual_grid_cols', gridCols);
-      applyGridLayout();
-      renderShortcuts();
+      localStorage.setItem('sual_grid_cols', String(gridCols));
+      applyLayoutAndScale(true);
     });
 
-    gridRowsSelect.addEventListener('change', (e) => {
+    $('gridRowsSelect').addEventListener('change', (e) => {
       gridRows = parseInt(e.target.value);
-      localStorage.setItem('sual_grid_rows', gridRows);
-      applyGridLayout();
-      renderShortcuts();
+      localStorage.setItem('sual_grid_rows', String(gridRows));
+      applyLayoutAndScale(true);
     });
 
-    const iconSizeRange = document.getElementById('iconSizeRange');
-    const iconSizeLabel = document.getElementById('iconSizeLabel');
-    iconSizeRange.addEventListener('input', (e) => {
+    $('iconSizeRange').addEventListener('input', (e) => {
       const val = e.target.value;
-      iconSizeLabel.textContent = val;
+      $('iconSizeLabel').textContent = val;
       localStorage.setItem('sual_icon_size', val);
-      applyGridLayout();
+      applyLayoutAndScale(false);
     });
 
-    const avatarSizeRange = document.getElementById('avatarSizeRange');
-    avatarSizeRange.addEventListener('input', (e) => {
+    fontSizeRange.addEventListener('input', (e) => {
+      applyGlobalFontSize(e.target.value);
+    });
+
+    $('avatarSizeRange').addEventListener('input', (e) => {
       const val = e.target.value;
-      document.documentElement.style.setProperty('--avatar-size', val + 'px');
+      document.documentElement.style.setProperty('--avatar-size', `${val}px`);
       localStorage.setItem('sual_avatar_size', val);
     });
 
@@ -1420,17 +1581,14 @@
       });
     });
 
-    document.getElementById('resetBgBtn').addEventListener('click', () => {
+    $('resetBgBtn').addEventListener('click', () => {
       localStorage.removeItem('sual_bg');
       document.body.style.backgroundImage = 'none';
       document.body.style.backgroundColor = '#000000';
     });
 
     function initSettings() {
-      localStorage.removeItem('sual_shortcuts_v2');
-
-      const savedAvatar = localStorage.getItem('sual_avatar');
-      avatarImg.src = savedAvatar || defaultAvatarSvg;
+      $('avatarImg').src = localStorage.getItem('sual_avatar') || defaultAvatarSvg;
 
       const savedBg = localStorage.getItem('sual_bg');
       if (savedBg) {
@@ -1442,14 +1600,14 @@
 
       const savedIconSize = localStorage.getItem('sual_icon_size');
       if (savedIconSize) {
-        iconSizeRange.value = savedIconSize;
-        iconSizeLabel.textContent = savedIconSize;
+        $('iconSizeRange').value = savedIconSize;
+        $('iconSizeLabel').textContent = savedIconSize;
       }
 
       const savedAvatarSize = localStorage.getItem('sual_avatar_size');
       if (savedAvatarSize) {
-        avatarSizeRange.value = savedAvatarSize;
-        document.documentElement.style.setProperty('--avatar-size', savedAvatarSize + 'px');
+        $('avatarSizeRange').value = savedAvatarSize;
+        document.documentElement.style.setProperty('--avatar-size', `${savedAvatarSize}px`);
       }
 
       const savedBgFit = localStorage.getItem('sual_bg_fit');
@@ -1459,17 +1617,13 @@
         if (radio) radio.checked = true;
       }
 
-      gridCols = parseInt(localStorage.getItem('sual_grid_cols')) || 5;
-      gridRows = parseInt(localStorage.getItem('sual_grid_rows')) || 0;
-      showAddShortcut = localStorage.getItem('sual_show_add_shortcut') !== 'false';
-      shortcuts = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-
-      gridColsSelect.value = String(gridCols);
-      gridRowsSelect.value = String(gridRows);
+      $('gridColsSelect').value = String(gridCols);
+      $('gridRowsSelect').value = String(gridRows);
       updateAddShortcutToggleLabel();
 
-      applyGridLayout();
-      renderShortcuts();
+      applyGlobalFontSize(globalFontSize);
+      applyBrightness(brightnessPercent);
+      applyLayoutAndScale(true);
     }
 
     initSettings();
