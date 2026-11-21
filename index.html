@@ -62,7 +62,7 @@
     header {
       width: 100%;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: center;
       gap: 12px;
       margin-bottom: 36px;
@@ -87,20 +87,76 @@
       min-width: 0;
     }
 
-    .menu-wrapper {
+    main {
+      width: 100%;
+      max-width: 780px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 5;
+    }
+
+    .top-profile-row {
       position: relative;
-      flex-shrink: 0;
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      margin-bottom: 28px;
       z-index: 40;
+      animation: fadeUp 0.6s ease-out;
+    }
+
+    .avatar-container {
+      position: relative;
+      padding: 0;
+      border: none;
+      background: transparent;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: var(--avatar-size);
+      height: var(--avatar-size);
+      border-radius: 50%;
+      border: none;
+      outline: none;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65);
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow: hidden;
+      background: transparent;
+    }
+
+    .avatar-wrapper:active {
+      transform: scale(0.93);
+    }
+
+    .avatar-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 50%;
+    }
+
+    .menu-wrapper {
+      position: absolute;
+      right: 4px;
+      bottom: 0;
+      flex-shrink: 0;
+      z-index: 45;
     }
 
     .hamburger-btn {
       width: 42px;
       height: 42px;
       border-radius: 50%;
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      box-shadow: var(--glass-highlight), 0 4px 12px rgba(0, 0, 0, 0.45);
-      color: var(--text-main);
+      background: rgba(34, 42, 60, 0.88);
+      border: 1.5px solid rgba(255, 255, 255, 0.42);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35), 0 6px 18px rgba(0, 0, 0, 0.72);
+      color: #ffffff;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -109,40 +165,46 @@
       cursor: pointer;
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      transition: transform 0.2s ease, background 0.2s ease;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .hamburger-btn:hover {
+      background: rgba(48, 58, 82, 0.95);
+      border-color: rgba(255, 255, 255, 0.65);
     }
 
     .hamburger-btn:active {
       transform: scale(0.92);
-      background: rgba(255, 255, 255, 0.16);
+      background: rgba(65, 78, 108, 0.98);
     }
 
     .hamburger-line {
       width: 18px;
-      height: 2px;
-      background-color: var(--text-main);
+      height: 2.2px;
+      background-color: #ffffff;
       border-radius: 2px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
       transition: transform 0.25s ease, opacity 0.2s ease;
     }
 
     .menu-wrapper.open .hamburger-line:nth-child(1) {
-      transform: translateY(6.5px) rotate(45deg);
+      transform: translateY(6.7px) rotate(45deg);
     }
     .menu-wrapper.open .hamburger-line:nth-child(2) {
       opacity: 0;
     }
     .menu-wrapper.open .hamburger-line:nth-child(3) {
-      transform: translateY(-6.5px) rotate(-45deg);
+      transform: translateY(-6.7px) rotate(-45deg);
     }
 
     .dropdown-menu {
       position: absolute;
       top: 50px;
       right: 0;
-      min-width: 148px;
-      background: rgba(18, 22, 32, 0.92);
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      box-shadow: var(--glass-highlight), 0 14px 32px rgba(0, 0, 0, 0.78);
+      min-width: 164px;
+      background: rgba(18, 22, 32, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: var(--glass-highlight), 0 14px 32px rgba(0, 0, 0, 0.85);
       border-radius: 16px;
       padding: 6px;
       display: none;
@@ -174,56 +236,7 @@
 
     .menu-item-btn:hover,
     .menu-item-btn:active {
-      background: rgba(255, 255, 255, 0.12);
-    }
-
-    .menu-item-btn.active-edit {
-      color: #60a5fa;
-      font-weight: 600;
-    }
-
-    main {
-      width: 100%;
-      max-width: 780px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 5;
-    }
-
-    .avatar-container {
-      position: relative;
-      padding: 0;
-      border: none;
-      background: transparent;
-      margin-bottom: 28px;
-      animation: fadeUp 0.6s ease-out;
-    }
-
-    .avatar-wrapper {
-      position: relative;
-      width: var(--avatar-size);
-      height: var(--avatar-size);
-      border-radius: 50%;
-      border: none;
-      outline: none;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65);
-      cursor: pointer;
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      overflow: hidden;
-      background: transparent;
-    }
-
-    .avatar-wrapper:active {
-      transform: scale(0.93);
-    }
-
-    .avatar-wrapper img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.14);
     }
 
     .search-box {
@@ -242,6 +255,8 @@
       margin-bottom: 38px;
       transition: all 0.25s ease;
       animation: fadeUp 0.7s ease-out;
+      position: relative;
+      z-index: 10;
     }
 
     .search-box:focus-within {
@@ -302,6 +317,8 @@
       color: var(--text-main);
       cursor: pointer;
       user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
       transition: transform 0.2s ease, opacity 0.2s ease;
     }
 
@@ -314,8 +331,9 @@
     }
 
     .shortcut-item.dragging {
-      opacity: 0.42;
-      transform: scale(0.92);
+      opacity: 0.5;
+      transform: scale(1.06);
+      z-index: 20;
     }
 
     .shortcut-item.drag-over .shortcut-icon {
@@ -635,6 +653,12 @@
       border: 1px solid rgba(255, 255, 255, 0.12);
     }
 
+    .divider-line {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.1);
+      margin: 16px 0;
+    }
+
     @media (max-width: 600px) {
       body {
         padding: 18px 14px 5vh 14px;
@@ -653,25 +677,27 @@
   <div class="page-wrapper">
     <header>
       <div class="brand-signature">Wei-Fan's homepage</div>
-      <div class="menu-wrapper" id="menuWrapper">
-        <button class="hamburger-btn" id="hamburgerBtn" aria-label="開啟選單" title="功能選單">
-          <span class="hamburger-line"></span>
-          <span class="hamburger-line"></span>
-          <span class="hamburger-line"></span>
-        </button>
-        <div class="dropdown-menu" id="dropdownMenu">
-          <button class="menu-item-btn" id="toggleEditBtn">編輯捷徑</button>
-          <button class="menu-item-btn" id="bgBtn">更換背景</button>
-          <button class="menu-item-btn" id="settingsBtn">首頁設定</button>
-          <button class="menu-item-btn" id="toggleAddShortcutBtn">隱藏新增捷徑按鈕</button>
-        </div>
-      </div>
     </header>
 
     <main>
-      <div class="avatar-container">
-        <div class="avatar-wrapper" id="avatarBox" title="點擊更換個人頭像">
-          <img id="avatarImg" src="" alt="個人頭像" />
+      <div class="top-profile-row">
+        <div class="avatar-container">
+          <div class="avatar-wrapper" id="avatarBox" title="點擊更換個人頭像">
+            <img id="avatarImg" src="" alt="個人頭像" />
+          </div>
+        </div>
+
+        <div class="menu-wrapper" id="menuWrapper">
+          <button class="hamburger-btn" id="hamburgerBtn" aria-label="開啟選單" title="功能選單">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+          </button>
+          <div class="dropdown-menu" id="dropdownMenu">
+            <button class="menu-item-btn" id="settingsBtn">首頁設定</button>
+            <button class="menu-item-btn" id="bgBtn">更換背景</button>
+            <button class="menu-item-btn" id="toggleAddShortcutBtn">隱藏新增捷徑按鈕</button>
+          </div>
         </div>
       </div>
 
@@ -682,7 +708,7 @@
       </form>
 
       <div class="edit-banner" id="editBanner">
-        <span>拖曳圖示可互換位置，或點擊圖示上方按鈕修改</span>
+        <span>拖曳圖示可互換位置，或點擊圖示上方按鈕修改／刪除</span>
         <button type="button" class="edit-done-pill" id="bannerDoneBtn">完成</button>
       </div>
 
@@ -693,6 +719,7 @@
   <input type="file" id="bgFileInput" accept="image/*" style="display: none;" />
   <input type="file" id="avatarFileInput" accept="image/*" style="display: none;" />
   <input type="file" id="shortcutIconFileInput" accept="image/*" style="display: none;" />
+  <input type="file" id="importJsonFileInput" accept=".json,application/json" style="display: none;" />
 
   <div class="modal-overlay" id="addModal">
     <div class="modal-card">
@@ -724,7 +751,7 @@
   </div>
 
   <div class="modal-overlay" id="settingsModal">
-    <div class="modal-card">
+    <div class="modal-card" id="settingsModalCard">
       <h2>首頁設定</h2>
 
       <div class="form-group">
@@ -786,6 +813,16 @@
       </div>
 
       <button class="btn btn-full" id="resetBgBtn">恢復純黑極簡背景</button>
+
+      <div class="divider-line"></div>
+
+      <div class="form-group">
+        <label>匯出 / 匯入記憶（完整備份捷徑、頭像與背景設定）</label>
+        <div class="grid-setting-row">
+          <button type="button" class="btn btn-full" id="exportDataBtn" style="margin-bottom:0;">匯出設定檔</button>
+          <button type="button" class="btn btn-full" id="importDataBtn" style="margin-bottom:0;">匯入設定檔</button>
+        </div>
+      </div>
 
       <div class="btn-row">
         <button class="btn btn-primary" id="closeSettingsBtn" style="width:100%;">完成</button>
@@ -888,6 +925,13 @@
       renderShortcuts();
     }
 
+    function setEditMode(state) {
+      if (isEditMode === state) return;
+      isEditMode = state;
+      document.body.classList.toggle('edit-mode', isEditMode);
+      renderShortcuts();
+    }
+
     function renderShortcuts() {
       grid.innerHTML = '';
 
@@ -905,7 +949,6 @@
         a.href = isEditMode ? 'javascript:void(0)' : item.url;
         a.dataset.index = index;
         a.dataset.draggable = 'true';
-
         if (isEditMode) {
           a.setAttribute('draggable', 'true');
         }
@@ -947,8 +990,47 @@
           openShortcutModal(index);
         });
 
+        let pressTimer = null;
+        let startX = 0;
+        let startY = 0;
+        let suppressClick = false;
+        let isTouchDragging = false;
+
+        a.addEventListener('mousedown', (e) => {
+          if (e.button !== 0 || isEditMode) return;
+          if (e.target.classList.contains('badge-btn')) return;
+          startX = e.clientX;
+          startY = e.clientY;
+          suppressClick = false;
+          pressTimer = setTimeout(() => {
+            suppressClick = true;
+            setEditMode(true);
+          }, 420);
+        });
+
+        a.addEventListener('mousemove', (e) => {
+          if (!pressTimer) return;
+          if (Math.abs(e.clientX - startX) > 8 || Math.abs(e.clientY - startY) > 8) {
+            clearTimeout(pressTimer);
+            pressTimer = null;
+          }
+        });
+
+        a.addEventListener('mouseup', () => {
+          clearTimeout(pressTimer);
+          pressTimer = null;
+        });
+
+        a.addEventListener('mouseleave', () => {
+          clearTimeout(pressTimer);
+          pressTimer = null;
+        });
+
         a.addEventListener('dragstart', (e) => {
-          if (!isEditMode) return;
+          if (!isEditMode) {
+            e.preventDefault();
+            return;
+          }
           dragSrcIndex = index;
           a.classList.add('dragging');
           e.dataTransfer.effectAllowed = 'move';
@@ -978,38 +1060,81 @@
           document.querySelectorAll('.shortcut-item').forEach(el => el.classList.remove('drag-over'));
         });
 
-        let touchStartIndex = null;
         a.addEventListener('touchstart', (e) => {
-          if (!isEditMode) return;
           if (e.target.classList.contains('badge-btn')) return;
-          touchStartIndex = index;
-          a.classList.add('dragging');
+          const touch = e.touches[0];
+          startX = touch.clientX;
+          startY = touch.clientY;
+          suppressClick = false;
+
+          if (isEditMode) {
+            isTouchDragging = true;
+            a.classList.add('dragging');
+          } else {
+            isTouchDragging = false;
+            pressTimer = setTimeout(() => {
+              suppressClick = true;
+              if (navigator.vibrate) navigator.vibrate(25);
+              setEditMode(true);
+            }, 400);
+          }
         }, { passive: true });
 
         a.addEventListener('touchmove', (e) => {
-          if (!isEditMode || touchStartIndex === null) return;
-          e.preventDefault();
           const touch = e.touches[0];
+          if (!isEditMode) {
+            if (Math.abs(touch.clientX - startX) > 10 || Math.abs(touch.clientY - startY) > 10) {
+              clearTimeout(pressTimer);
+              pressTimer = null;
+            }
+            return;
+          }
+
+          if (!isTouchDragging) return;
+          e.preventDefault();
           const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
           const targetItem = targetEl ? targetEl.closest('.shortcut-item[data-draggable="true"]') : null;
           document.querySelectorAll('.shortcut-item').forEach(el => el.classList.remove('drag-over'));
-          if (targetItem && parseInt(targetItem.dataset.index) !== touchStartIndex) {
+          if (targetItem && parseInt(targetItem.dataset.index) !== index) {
             targetItem.classList.add('drag-over');
           }
         }, { passive: false });
 
         a.addEventListener('touchend', (e) => {
-          if (!isEditMode || touchStartIndex === null) return;
+          clearTimeout(pressTimer);
+          pressTimer = null;
+          if (!isTouchDragging) return;
+
           const touch = e.changedTouches[0];
           const targetEl = document.elementFromPoint(touch.clientX, touch.clientY);
           const targetItem = targetEl ? targetEl.closest('.shortcut-item[data-draggable="true"]') : null;
           a.classList.remove('dragging');
           document.querySelectorAll('.shortcut-item').forEach(el => el.classList.remove('drag-over'));
+
           if (targetItem) {
             const targetIndex = parseInt(targetItem.dataset.index);
-            swapShortcuts(touchStartIndex, targetIndex);
+            swapShortcuts(index, targetIndex);
           }
-          touchStartIndex = null;
+          isTouchDragging = false;
+        });
+
+        a.addEventListener('touchcancel', () => {
+          clearTimeout(pressTimer);
+          pressTimer = null;
+          isTouchDragging = false;
+          a.classList.remove('dragging');
+          document.querySelectorAll('.shortcut-item').forEach(el => el.classList.remove('drag-over'));
+        });
+
+        a.addEventListener('contextmenu', (e) => {
+          e.preventDefault();
+        });
+
+        a.addEventListener('click', (e) => {
+          if (suppressClick || isEditMode) {
+            e.preventDefault();
+            suppressClick = false;
+          }
         });
 
         grid.appendChild(a);
@@ -1088,20 +1213,9 @@
       }
     });
 
-    const toggleEditBtn = document.getElementById('toggleEditBtn');
     const bannerDoneBtn = document.getElementById('bannerDoneBtn');
-
-    function setEditMode(state) {
-      isEditMode = state;
-      document.body.classList.toggle('edit-mode', isEditMode);
-      toggleEditBtn.textContent = isEditMode ? '完成編輯' : '編輯捷徑';
-      toggleEditBtn.classList.toggle('active-edit', isEditMode);
-      menuWrapper.classList.remove('open');
-      renderShortcuts();
-    }
-
-    toggleEditBtn.addEventListener('click', () => {
-      setEditMode(!isEditMode);
+    bannerDoneBtn.addEventListener('click', () => {
+      setEditMode(false);
     });
 
     function updateAddShortcutToggleLabel() {
@@ -1116,10 +1230,6 @@
       updateAddShortcutToggleLabel();
       menuWrapper.classList.remove('open');
       renderShortcuts();
-    });
-
-    bannerDoneBtn.addEventListener('click', () => {
-      setEditMode(false);
     });
 
     document.getElementById('cancelAddBtn').addEventListener('click', () => {
@@ -1209,16 +1319,65 @@
     });
 
     const settingsModal = document.getElementById('settingsModal');
+
     document.getElementById('settingsBtn').addEventListener('click', () => {
       menuWrapper.classList.remove('open');
       settingsModal.classList.add('active');
     });
+
     document.getElementById('closeSettingsBtn').addEventListener('click', () => settingsModal.classList.remove('active'));
 
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
       overlay.addEventListener('click', (e) => {
         if (e.target === overlay) overlay.classList.remove('active');
       });
+    });
+
+    document.getElementById('exportDataBtn').addEventListener('click', () => {
+      const backupObj = {};
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        backupObj[key] = localStorage.getItem(key);
+      }
+      const jsonStr = JSON.stringify(backupObj, null, 2);
+      const blob = new Blob([jsonStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const dateStr = new Date().toISOString().slice(0, 10);
+      a.href = url;
+      a.download = `homepage_backup_${dateStr}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+
+    const importJsonFileInput = document.getElementById('importJsonFileInput');
+    document.getElementById('importDataBtn').addEventListener('click', () => {
+      importJsonFileInput.click();
+    });
+
+    importJsonFileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const data = JSON.parse(ev.target.result);
+          if (typeof data !== 'object' || data === null) {
+            throw new Error('格式錯誤');
+          }
+          Object.keys(data).forEach((k) => {
+            localStorage.setItem(k, data[k]);
+          });
+          alert('記憶匯入成功，即將重新載入首頁！');
+          location.reload();
+        } catch (err) {
+          alert('匯入失敗：檔案格式不正確或已損毀。');
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = '';
     });
 
     const gridColsSelect = document.getElementById('gridColsSelect');
@@ -1299,6 +1458,11 @@
         const radio = document.querySelector(`input[name="bgFit"][value="${savedBgFit}"]`);
         if (radio) radio.checked = true;
       }
+
+      gridCols = parseInt(localStorage.getItem('sual_grid_cols')) || 5;
+      gridRows = parseInt(localStorage.getItem('sual_grid_rows')) || 0;
+      showAddShortcut = localStorage.getItem('sual_show_add_shortcut') !== 'false';
+      shortcuts = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
       gridColsSelect.value = String(gridCols);
       gridRowsSelect.value = String(gridRows);
